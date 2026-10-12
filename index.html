@@ -48,7 +48,7 @@
     <div class="actions">
       <button id="installApp" type="button" title="Install QC Lab Compliance">⬇ <span class="hide-mobile">Install App</span></button>
       <button class="secondary" id="refresh" type="button" title="Reload dashboard">↻ <span class="hide-mobile">Refresh</span></button>
-      <a class="open-link" id="openFull" target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbze5P7J_yLKbWV5UPdPS-LXnucuJTnebIGU0LuxXugXLT56IL9z0xWFiKCK_vMliQGu/exec">Open full screen</a>
+      <a class="open-link" id="openFull" target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbzMzXSVbMzU8NR2Eh6cBiHFmSB5xLm__yYObPNak1KC1_S57lqytKwD7TZYEATsq6r6/exec">Open full screen</a>
     </div>
   </header>
   <main>
@@ -57,16 +57,16 @@
         <div class="spinner" id="spinner"></div>
         <h2 id="loadTitle">Opening QC dashboard…</h2>
         <p id="loadText">Connecting securely to your existing Google Apps Script dashboard. Your records and reminders remain in the existing Google Sheets workflow.</p>
-        <a class="open-link fallback" id="fallback" href="https://script.google.com/macros/s/AKfycbze5P7J_yLKbWV5UPdPS-LXnucuJTnebIGU0LuxXugXLT56IL9z0xWFiKCK_vMliQGu/exec" target="_blank" rel="noopener">Open dashboard directly</a>
+        <a class="open-link fallback" id="fallback" href="https://script.google.com/macros/s/AKfycbzMzXSVbMzU8NR2Eh6cBiHFmSB5xLm__yYObPNak1KC1_S57lqytKwD7TZYEATsq6r6/exec" target="_blank" rel="noopener">Open dashboard directly</a>
       </div>
     </div>
-    <iframe id="dashboard" title="QC Lab Compliance Dashboard" src="https://script.google.com/macros/s/AKfycbze5P7J_yLKbWV5UPdPS-LXnucuJTnebIGU0LuxXugXLT56IL9z0xWFiKCK_vMliQGu/exec" allow="clipboard-read; clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <iframe id="dashboard" title="QC Lab Compliance Dashboard" src="https://script.google.com/macros/s/AKfycbzMzXSVbMzU8NR2Eh6cBiHFmSB5xLm__yYObPNak1KC1_S57lqytKwD7TZYEATsq6r6/exec" allow="clipboard-read; clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>
   </main>
   <footer>Installable app shell · Live data and reminders are handled by Google Apps Script</footer>
 </div>
 <script>
   const frame=document.getElementById('dashboard'), loading=document.getElementById('loading');
-  let loadTimer=setTimeout(()=>{document.getElementById('spinner').style.display='none';document.getElementById('loadTitle').textContent='Dashboard taking longer than expected';document.getElementById('loadText').textContent='If the dashboard does not appear, open it directly and sign in with the Google account that has access.';document.getElementById('fallback').style.display='inline-block';},12000);
+  let loadTimer=setTimeout(()=>{document.getElementById('spinner').style.display='none';document.getElementById('loadTitle').textContent='Dashboard taking longer than expected';document.getElementById('loadText').textContent='The dashboard is not responding yet. Check the Apps Script deployment, or open it directly to test the backend.';document.getElementById('fallback').style.display='inline-block';},8000);
   frame.addEventListener('load',()=>{clearTimeout(loadTimer);setTimeout(()=>{loading.style.display='none';},1000);});
   document.getElementById('refresh').addEventListener('click',()=>{loading.style.display='grid';document.getElementById('spinner').style.display='block';document.getElementById('loadTitle').textContent='Refreshing dashboard…';document.getElementById('loadText').textContent='Reloading the live Apps Script dashboard.';frame.src=frame.src;loadTimer=setTimeout(()=>{document.getElementById('spinner').style.display='none';document.getElementById('fallback').style.display='inline-block';},12000);});
   if('serviceWorker' in navigator && location.protocol.startsWith('http')) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
