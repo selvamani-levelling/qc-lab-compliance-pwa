@@ -46,6 +46,7 @@
       </div>
     </div>
     <div class="actions">
+      <button id="installApp" type="button" title="Install QC Lab Compliance">⬇ <span class="hide-mobile">Install App</span></button>
       <button class="secondary" id="refresh" type="button" title="Reload dashboard">↻ <span class="hide-mobile">Refresh</span></button>
       <a class="open-link" id="openFull" target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbze5P7J_yLKbWV5UPdPS-LXnucuJTnebIGU0LuxXugXLT56IL9z0xWFiKCK_vMliQGu/exec">Open full screen</a>
     </div>
@@ -69,8 +70,37 @@
   frame.addEventListener('load',()=>{clearTimeout(loadTimer);setTimeout(()=>{loading.style.display='none';},1000);});
   document.getElementById('refresh').addEventListener('click',()=>{loading.style.display='grid';document.getElementById('spinner').style.display='block';document.getElementById('loadTitle').textContent='Refreshing dashboard…';document.getElementById('loadText').textContent='Reloading the live Apps Script dashboard.';frame.src=frame.src;loadTimer=setTimeout(()=>{document.getElementById('spinner').style.display='none';document.getElementById('fallback').style.display='inline-block';},12000);});
   if('serviceWorker' in navigator && location.protocol.startsWith('http')) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
-  let installPrompt;
-  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;});
+  // Keep an Install App button visible. Chrome supplies the native install prompt
+  // only when the PWA meets its installability requirements.
+  let installPrompt = null;
+  const installButton = document.getElementById('installApp');
+  installButton.addEventListener('click', async () => {
+    if (installPrompt) {
+      installPrompt.prompt();
+      const choice = await installPrompt.userChoice;
+      if (choice && choice.outcome === 'accepted') installButton.style.display = 'none';
+      installPrompt = null;
+      return;
+    }
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    const isInStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    if (isInStandalone) {
+      alert('QC Lab Compliance is already installed on this device.');
+    } else if (isIOS) {
+      alert('To install: open this page in Safari, tap Share, then choose Add to Home Screen.');
+    } else {
+      alert('Chrome has not provided the automatic install prompt yet. Open this page in a normal Chrome window (not Incognito), reload it, then use ⋮ > Cast, save and share > Install page as app, or look for Install QC Lab Compliance in the menu.');
+    }
+  });
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    installPrompt = e;
+    installButton.title = 'Install QC Lab Compliance';
+  });
+  window.addEventListener('appinstalled', () => {
+    installButton.style.display = 'none';
+    installPrompt = null;
+  });
 </script>
 </body>
 </html>
